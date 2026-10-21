@@ -1,0 +1,46 @@
+# commit message 模板（配合 commitizen 使用）
+# 用法：git config --local commit.template .gitmessage
+# 更佳：用 `git cz` 替代 `git commit`，commitizen 会交互式生成下面的格式
+#
+# 格式：<type>(<scope>): <subject>
+#
+# ============================================================
+
+<type>(<scope>): <subject>
+
+# <body> —— 说明改了什么、为什么改，不超过 72 字符/行
+#
+# <footer>
+# - BREAKING CHANGE: 有破坏性变更必须写
+# - Co-Authored-By: Claude <noreply@anthropic.com>  # AI 辅助时加
+
+# ============================================================
+# type 白名单（Conventional Commits）：
+#   feat      新功能
+#   fix       bug 修复
+#   docs      文档变更
+#   style     格式调整（不改逻辑）
+#   refactor  重构（不修 bug 不加功能）
+#   test      测试相关
+#   chore     构建/工具/依赖
+#   perf      性能优化
+#   ci        CI 配置
+#   build     构建系统
+# ============================================================
+# scope 白名单（按 FastAPI 分层）：
+#   auth       认证授权
+#   user       用户模块
+#   router     路由层
+#   model      数据模型
+#   schema     Pydantic schema
+#   db         数据库/迁移
+#   config     配置
+#   test       测试
+#   ci         CI/CD
+# ============================================================
+# 提交前自检：
+#   [ ] ruff check . 全过
+#   [ ] pytest 全过，覆盖率不下降
+#   [ ] mypy 无新增 error
+#   [ ] migration 已生成并测试
+# ============================================================
