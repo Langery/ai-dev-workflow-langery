@@ -1,0 +1,43 @@
+// 这是 Go module 声明模板。把它放到你的 Go 项目根目录，改 module 名为你的实际路径。
+//
+// 用法：
+//   1. 复制此文件到项目根目录，改名为 go.mod（去掉 .txt）
+//   2. 把 module github.com/yourusername/yourproject 改成你的实际 module 路径
+//   3. 运行 go mod tidy 拉取依赖
+//
+// 关于 Go 版本：go 1.22+ 支持 go directives 中的工具链版本管理
+
+module github.com/yourusername/yourproject
+
+go 1.22.0
+
+require (
+	// 标准 HTTP 路由（Go 1.22+ 内置增强，不再需要 chi/gin）
+	// 如果你用 chi：
+	// github.com/go-chi/chi/v5 v5.0.0
+
+	// 数据库
+	github.com/jackc/pgx/v5 v5.5.0
+	github.com/golang-migrate/migrate/v4 v4.17.0
+
+	// 认证
+	github.com/golang-jwt/jwt/v5 v5.2.0
+	golang.org/x/crypto v0.20.0 // bcrypt
+
+	// 配置
+	github.com/spf13/viper v1.18.0
+
+	// 日志
+	github.com/rs/zerolog v1.32.0
+)
+
+// ============================================================
+// 关于 go.mod 的工作约定
+// ============================================================
+// 1. 不要手动编辑 require 块，用 `go get` 添加依赖
+//    正确：go get github.com/golang-jwt/jwt/v5
+//    错误：手动在 require 里加一行
+// 2. `go mod tidy` 清理未使用依赖，提交前必跑
+// 3. 不用 replace 指向本地路径（除非开发期临时调试）
+// 4. 不用 vendor（除非部署环境无法访问网络）
+// ============================================================
