@@ -1,0 +1,63 @@
+# <type>(<scope>): <subject>
+
+# 说明：
+# - 用 `git cz` 替代 `git commit`，交互式填写
+# - type 必填，scope 选填，subject 必填
+# - subject 用祈使句，首字母小写，不加句号
+# - body 解释「为什么改」，不是「改了什么」
+# - footer 用于关闭 issue 或标记 breaking change
+# - AI 辅助的 commit 在 footer 加 Co-Authored-By
+#
+# 排版约定（下方两张表都是定宽对齐，请勿手写空格）：
+# - 统一前缀 `#   `（井号 + 3 空格）
+# - type 表用 `name.ljust(9)` + 1 空格，desc 从第 15 列起（0-based offset 14）
+# - scope 表用 `name.ljust(10)` + 1 空格，desc 从第 16 列起（0-based offset 15）
+# - 两张表宽度不同是刻意的：type 名最长 8 字符(refactor)，scope 名最长 9 字符(blueprint)
+# - 新增条目后请按上述公式对齐，不要凭肉眼数空格
+
+# type 可选值：
+#   feat      新功能
+#   fix       bug 修复
+#   docs      文档
+#   style     格式（不影响代码逻辑）
+#   refactor  重构（既不是 feat 也不是 fix）
+#   test      测试
+#   chore     构建/依赖/配置
+#   perf      性能优化
+#   ci        CI 配置
+
+# scope 白名单（按 Flask 分层）：
+#   blueprint  蓝图分区
+#   routes     路由
+#   service    业务逻辑
+#   model      数据模型
+#   schema     数据传输结构
+#   auth       认证授权
+#   config     配置
+#   db         数据库/迁移
+#   test       测试
+#   ci         CI/CD
+
+# 示例：
+# feat(auth): 密码用 scrypt 哈希替代明文存储
+# fix(service): 归属隔离查询漏掉了 deleted=true 条件
+# test(config): 加 20 个 case 把 config.py 覆盖率拉到 100%
+# chore(ci): ruff check . 加入 CI 步骤
+
+# body 写法（解释 Why）：
+# - 用 - 开头列要点
+# - 不要解释 What（diff 已经能看出）
+# - 写清楚动机、权衡、踩坑
+
+# footer 写法：
+# BREAKING CHANGE: <描述>
+# Closes #123, #456
+# Co-Authored-By: Claude <noreply@anthropic.com>
+
+# 检查清单（提交前自问）：
+# [ ] type 选对了吗
+# [ ] scope 在白名单里吗
+# [ ] subject 一眼能看懂吗
+# [ ] body 写了 why 吗
+# [ ] 跑过 pytest 吗
+# [ ] ruff check . 全过吗
