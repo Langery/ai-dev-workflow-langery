@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 提交前自动跑 lint-staged（只检查暂存区文件）
+npx lint-staged
+
+# 可选：跑全量测试（慢，按需取消注释）
+# npm run test
