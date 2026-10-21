@@ -1,0 +1,47 @@
+# commit message 模板（Rust 项目）
+# 用法：git config --local commit.template .gitmessage
+#
+# 格式：<type>(<scope>): <subject>
+#
+# ============================================================
+
+<type>(<scope>): <subject>
+
+# <body> —— 说明改了什么、为什么改，不超过 72 字符/行
+#
+# <footer>
+# - BREAKING CHANGE: 有破坏性变更必须写
+# - Co-Authored-By: Claude <noreply@anthropic.com>  # AI 辅助时加
+
+# ============================================================
+# type 白名单（Conventional Commits）：
+#   feat      新功能
+#   fix       bug 修复
+#   docs      文档变更
+#   style     格式调整（不改逻辑）
+#   refactor  重构（不修 bug 不加功能）
+#   test      测试相关
+#   chore     构建/工具/依赖
+#   perf      性能优化
+#   ci        CI 配置
+#   build     构建系统
+# ============================================================
+# scope 白名单（按 Rust 分层）：
+#   handler    HTTP handler（axum/actix 路由层）
+#   service    业务逻辑
+#   repo/db    数据访问（sqlx/diesel）
+#   model      领域模型
+#   error      统一错误类型
+#   config     配置
+#   auth       认证授权
+#   middleware 中间件
+#   test       测试
+#   deps       依赖升级（Cargo.toml/Cargo.lock）
+# ============================================================
+# 提交前自检：
+#   [ ] cargo fmt --check 无 diff
+#   [ ] cargo clippy -- -D warnings 全过
+#   [ ] cargo test 全过
+#   [ ] 没有 unwrap()/expect()（测试代码除外）
+#   [ ] 改了 Cargo.toml 时 Cargo.lock 一并提交
+# ============================================================
