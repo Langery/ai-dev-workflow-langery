@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ruff check*)",
+      "Bash(ruff format*)",
+      "Bash(pytest*)",
+      "Bash(mypy*)",
+      "Bash(git cz*)",
+      "Bash(git commit*)",
+      "Bash(pre-commit run*)",
+      "Bash(alembic*)",
+      "Bash(uvicorn*)"
+    ]
+  }
+}
