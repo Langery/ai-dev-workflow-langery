@@ -1,0 +1,30 @@
+# pre-commit 钩子配置（Rust 项目）
+# 模板文件名 pre-commit-config.yaml，复制到项目后改名为 .pre-commit-config.yaml
+# 安装：pip install pre-commit && pre-commit install
+
+repos:
+  # 通用检查：大文件、合并冲突标记、尾随空格
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-toml
+
+  # Rust 官方钩子：fmt + clippy + 静态检查
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: fmt
+        args: ["--", "--edition", "2021"]
+      - id: cargo-check
+      - id: clippy
+        args: ["--", "-D", "warnings"]
+
+  # commit message 规范（可选，配合 commitlint）
+  # - repo: https://github.com/compilerla/conventional-pre-commit
+  #   rev: v3.2.0
+  #   hooks:
+  #     - id: conventional-pre-commit
+  #       stages: [commit-msg]
