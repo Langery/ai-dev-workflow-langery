@@ -1,0 +1,13 @@
+# ai-dev-workflow 运行依赖
+#
+# 必需依赖: 无
+# 本 skill 的脚本仅使用 Python 标准库，零第三方依赖，可直接离线运行。
+#
+# 解释器要求: Python 3.11+
+#   原因: scripts/detect_project.py 用标准库 tomllib 结构化解析
+#         pyproject.toml / Cargo.toml（避免注释里的 "tool.ruff" 被裸子串
+#         误判为已配置 lint）。tomllib 自 Python 3.11 起进入标准库。
+#   自检: python3 --version 需 >= 3.11；脚本的 --selftest 在低版本会
+#         显式报错并提示升级，不会静默退化。
+#
+# 可选增强: 无
