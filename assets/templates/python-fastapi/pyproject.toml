@@ -1,0 +1,150 @@
+[project]
+name = "fastapi-app"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "asyncpg>=0.29",      # PostgreSQL async driver
+    "python-jose[cryptography]",  # JWT
+    "passlib[bcrypt]",    # 密码哈希
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "httpx>=0.27",       # FastAPI TestClient 底层
+    "commitizen>=3.25",
+    "pre-commit>=3.7",
+    "mypy>=1.10",
+]
+
+# ============================================================
+# Ruff - 现代 Python linter
+# 文档：https://docs.astral.sh/ruff/
+# ============================================================
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "build", "dist", "migrations"]
+
+[tool.ruff.lint]
+# 启用规则集：
+#   E   pycodestyle errors
+#   W   pycodestyle warnings
+#   F   pyflakes（未使用 import、变量等）
+#   I   isort（import 排序）
+#   B   bugbear（常见 bug 模式）
+#   UP  pyupgrade（现代化语法）
+#   N   pep8-naming
+#   ASYNC  async 规范（FastAPI 必备）
+#   S    bandit 安全检查
+select = ["E", "W", "F", "I", "B", "UP", "N", "ASYNC", "S"]
+
+# 忽略规则（带原因）：
+ignore = [
+    "E501",  # 行长由 line-length 控制，不再单独报
+    "S101",  # 测试里用 assert 是正常的
+    "S104",  # 0.0.0.0 绑定在开发环境是正常的
+]
+
+[tool.ruff.lint.per-file-ignores]
+# FastAPI 路由文件的 __init__.py 是标准模式
+"app/routers/*/__init__.py" = ["E402", "F401"]
+"tests/*" = ["S101", "S105"]  # 测试里允许 assert 和硬编码密码
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
+# ============================================================
+# Pytest - 测试配置
+# FastAPI 用 httpx.AsyncClient + pytest-asyncio
+# ============================================================
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"  # pytest-asyncio 自动识别 async 测试
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--showlocals",
+]
+markers = [
+    "slow: 标记慢测试，可用 -m 'not slow' 跳过",
+    "integration: 集成测试，需要外部服务",
+    "auth: 需要认证的测试",
+]
+
+# ============================================================
+# Coverage - 覆盖率配置
+# 目标：90%+，CI 门槛 85%
+# ============================================================
+[tool.coverage.run]
+source = ["app"]
+branch = true
+omit = [
+    "*/__init__.py",
+    "*/tests/*",
+    "*/migrations/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+precision = 1
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+# ============================================================
+# Commitizen - 规范化 commit message
+# 用 `git cz` 替代 `git commit`
+# ============================================================
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+version_files = ["pyproject.toml:version"]
+tag_format = "v$version"
+update_changelog_on_bump = true
+style = [
+    ["type", "feat|fix|docs|style|refactor|test|chore|perf|ci"],
+    ["scope", "auth|user|router|model|schema|db|migration|config|test|ci"],
+]
+
+[tool.commitizen.changelog]
+file = "CHANGELOG.md"
+
+# ============================================================
+# Mypy - 静态类型检查（FastAPI 重度依赖类型注解）
+# ============================================================
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["migrations/", "build/", "dist/"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
