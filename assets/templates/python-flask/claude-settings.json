@@ -1,0 +1,26 @@
+{
+  "env": {
+    "FLASK_APP": "server.py",
+    "APP_ENV": "development"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(pytest*)",
+      "Bash(ruff*)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add*)",
+      "Bash(pre-commit run*)",
+      "Read(**)"
+    ],
+    "deny": [
+      "Bash(git push*)",
+      "Bash(rm -rf*)",
+      "Bash(docker*)"
+    ]
+  },
+  "includeCoSignedBy": true,
+  "coSignedByName": "Claude",
+  "coSignedByEmail": "noreply@anthropic.com"
+}
