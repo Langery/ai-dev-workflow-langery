@@ -1,0 +1,38 @@
+# Pre-commit 钩子配置
+# 安装：pre-commit install
+# 手动跑：pre-commit run --all-files
+# 文档：https://pre-commit.com
+
+repos:
+  # Ruff - Python lint + format
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.0
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  # 基础检查
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace      # 去行尾空格
+      - id: end-of-file-fixer        # 文件末尾加换行
+      - id: check-yaml               # YAML 语法检查
+      - id: check-toml               # TOML 语法检查
+      - id: check-json               # JSON 语法检查
+      - id: check-merge-conflict     # 检查合并冲突标记
+      - id: check-added-large-files # 阻止大文件提交
+        args: [--maxkb=500]
+      - id: detect-private-key       # 检测私钥泄露
+
+  # pytest - 提交前跑测试（可选，慢项目可去掉）
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest --cov --cov-fail-under=85
+        language: system
+        types: [python]
+        pass_filenames: false
+        stages: [push]  # 只在 push 时跑，commit 时太慢
