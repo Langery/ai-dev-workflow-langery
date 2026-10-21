@@ -1,0 +1,10 @@
+# clippy.toml — lint 配置（复制到项目根目录，文件名保持不变）
+# 命令行运行：cargo clippy -- -D warnings
+# 常用严格项建议写在 Cargo.toml 的 [lints.clippy] 中：
+#   unwrap_used = "deny"
+#   expect_used = "deny"
+#   print_stdout = "deny"
+#   todo = "warn"
+#   float_cmp = "warn"
+
+msrv = "1.75"
