@@ -1,0 +1,95 @@
+# golangci-lint 配置
+# 安装：go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+# 运行：golangci-lint run
+# 文档：https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 3m
+  go: "1.22"
+
+# 默认分析所有 .go 文件（含 test）
+  tests: true
+
+linters:
+  # 启用的 linter
+  enable:
+    - errcheck        # 检查未处理的 error 返回值（Go 最重要的一条）
+    - govet           # go vet 检查
+    - staticcheck     # 静态分析
+    - unused          # 未使用代码
+    - ineffassign     # 无效赋值
+    - gosimple        # 简化建议
+    - typecheck       # 类型检查
+    - gofmt           # 格式化（gofmt 兼容）
+    - goimports       # import 排序
+    - misspell        # 拼写检查
+    - revive          # golint 替代品
+    - gosec           # 安全检查
+    - gocritic        # 代码评审建议
+    - bodyclose        # http.Response.Body 必须 Close
+    - rowserrcheck     # sql.Rows.Err() 必须检查
+    - sqlclosecheck    # sql.Rows/Stmt 必须 Close
+
+  # 禁用的 linter
+  disable:
+    - lll             # 行长限制（Go 社区不强制）
+    - depguard        # 依赖白名单（按项目配，太死板）
+
+linters-settings:
+  errcheck:
+    # 检查类型断言
+    check-type-assertions: true
+    # 检查闭包
+    check-blank: false
+
+  govet:
+    # 启用 shadow 检查（变量遮蔽）
+    enable:
+      - shadow
+
+  gosec:
+    # 排除测试文件
+    excludes:
+      - G101  # 硬编码密码（测试里正常）
+      - G404  # 弱随机数（测试里正常）
+    severity: medium
+    confidence: medium
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+      - style
+
+  revive:
+    # 自定义规则
+    rules:
+      - name: exported
+        disabled: true  # 不强制导出函数有注释（项目内函数不需要）
+      - name: var-naming
+        arguments: ["camelCase", "initialism"]
+
+issues:
+  # 每个文件最多显示 50 条
+  max-issues-per-linter: 50
+  max-same-issues: 10
+
+  # 排除的路径
+  exclude-rules:
+    # 测试文件放宽规则
+    - path: _test\.go
+      linters:
+        - errcheck   # 测试里可以不检查 error
+        - gosec      # 测试里安全检查放宽
+
+    # 生成的代码（如 protoc/wire/moq）不检查
+    - path: \.pb\.go$
+    - path: \.wire\.go$
+
+  # 忽略已知问题
+  exclude-use-default: false
+
+output:
+  formats:
+    - format: colored-line-number
+  sort-results: true
