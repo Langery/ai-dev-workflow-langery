@@ -1,0 +1,107 @@
+[project]
+name = "flask-app"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+# ============================================================
+# Ruff - 现代 Python linter（替代 flake8 + isort + pyupgrade）
+# 文档：https://docs.astral.sh/ruff/
+# ============================================================
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "build", "dist"]
+
+[tool.ruff.lint]
+# 启用规则集：
+#   E   pycodestyle errors
+#   W   pycodestyle warnings
+#   F   pyflakes（未使用 import、变量等）
+#   I   isort（import 排序）
+#   B   bugbear（常见 bug 模式）
+#   UP  pyupgrade（现代化语法）
+#   N   pep8-naming
+select = ["E", "W", "F", "I", "B", "UP", "N"]
+
+# 忽略规则（带原因）：
+ignore = [
+    "E501",  # 行长由 line-length 控制，不再单独报
+    "B008",  # Flask 常用 default 参数，误报
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Flask Blueprint 的 __init__.py 是标准模式，允许 E402（import not at top）和 F401（unused import）
+"blueprints/*/__init__.py" = ["E402", "F401"]
+"tests/*" = ["E402"]  # 测试文件允许 import 不在顶部
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
+# ============================================================
+# Pytest - 测试配置
+# ============================================================
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--showlocals",
+]
+markers = [
+    "slow: 标记慢测试，可用 -m 'not slow' 跳过",
+    "integration: 集成测试，需要外部服务",
+]
+
+# ============================================================
+# Coverage - 覆盖率配置
+# 目标：90%+，CI 门槛 85%
+# ============================================================
+[tool.coverage.run]
+# 把你项目实际的包目录填进来（默认 blueprints/ common/，按你的结构调整）
+source = ["blueprints", "common"]
+branch = true  # 分支覆盖率
+omit = [
+    "*/__init__.py",
+    "*/tests/*",
+    "*/migrations/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+precision = 1
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+# ============================================================
+# Commitizen - 规范化 commit message
+# 用 `git cz` 替代 `git commit`
+# ============================================================
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+version_files = ["pyproject.toml:version"]
+tag_format = "v$version"
+update_changelog_on_bump = true
+style = [
+    ["type", "feat|fix|docs|style|refactor|test|chore|perf|ci"],
+    ["scope", "blueprint|routes|service|model|schema|auth|config|db|test|ci"],
+]
+
+[tool.commitizen.changelog]
+file = "CHANGELOG.md"
